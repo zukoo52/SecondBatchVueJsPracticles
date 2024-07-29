@@ -10,6 +10,24 @@
 
     <h1>im greate u can do this</h1>
   </div>
+<v-container>
+  <center>
+      <v-row>
+        <V-col cols="3">
+          <v-sheet color="green" elevation="20">one</v-sheet>
+        </V-col>
+        <V-col cols="3">
+          <v-sheet color="orange">one</v-sheet>
+        </V-col>
+        <V-col cols="3">
+          <v-sheet color="red">two</v-sheet>
+        </V-col>
+        <V-col cols="3">
+          <v-sheet color="black">three</v-sheet>
+        </V-col>
+      </v-row>
+    </center>
+  </v-container>
 </template>
 
 <script setup>

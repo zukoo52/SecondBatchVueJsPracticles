@@ -5,7 +5,11 @@
  */
 
 // Plugins
+import 'bootstrap/dist/css/bootstrap.css';
+
 import { registerPlugins } from '@/plugins'
+
+import "@/assets/scss/sample.scss"
 
 // Components
 import App from './App.vue'

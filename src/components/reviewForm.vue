@@ -1,26 +1,25 @@
 <template>
-  <div class="review-area">
   <div class="reviews-section">
     <v-container>
       <div class="reviews-header">
-
         <h2>Customers <span class="highlight">reviews</span></h2>
-
-
-        <v-btn color="primary" class="write-review-btn" >write-in-review</v-btn>
+        <v-btn
+          color="primary"
+          @click="showForm = !showForm"
+          class="write-review-btn"
+          >Write a Review</v-btn
+        >
       </div>
-      <div>
-        <br>
-      </div>
+
       <v-row>
         <v-col cols="8">
-          <v-card class="pa-5" elevation="3">
+          <v-card class="pa-5 review-card" elevation="3">
             <v-data-table :items="items" :headers="headers" class="elevation-1">
               <template v-slot:[`item.Rname`]="{ item }">
                 <div class="review-item">
                   <div class="review-details">
                     <p class="reviewer-name">@{{ item.Rname }}</p>
-
+                    <p class="product-name">{{ item.name }}</p>
                     <v-rating
                       dense
                       size="25"
@@ -28,7 +27,7 @@
                       readonly
                       :model-value="item.rating"
                     ></v-rating>
-
+                    <p class="review-text">{{ item.text }}</p>
                   </div>
                 </div>
               </template>
@@ -36,7 +35,7 @@
           </v-card>
         </v-col>
         <v-col cols="4">
-          <v-card class="pa-5" elevation="3">
+          <v-card class="pa-5 review-card" elevation="3">
             <div class="rating-summary">
               <h3>4.89 out of 5 stars</h3>
               <p>13 reviews</p>
@@ -59,13 +58,21 @@
       </v-row>
     </v-container>
   </div>
-</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      showForm: false,
+      newReview: {
+        code: "",
+        name: "",
+        Rname: "",
+        date: "",
+        rating: 0,
+        text: "",
+      },
       items: [
         {
           code: "BP - Baby Products",
@@ -73,7 +80,6 @@ export default {
           Rname: "Samitha Rathnayaka",
           date: "07/21/2024",
           rating: 5,
-          Rcount: "5/5",
           text: "This product is good",
         },
         {
@@ -82,7 +88,6 @@ export default {
           Rname: "Malinga Bandara",
           date: "01/01/2024",
           rating: 5,
-          Rcount: "5/5",
           text: "This product is good",
         },
         {
@@ -91,7 +96,6 @@ export default {
           Rname: "John Doe",
           date: "03/15/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Great phone with excellent features",
         },
         {
@@ -100,7 +104,6 @@ export default {
           Rname: "Jane Smith",
           date: "02/20/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Perfect fit and works flawlessly",
         },
         {
@@ -109,7 +112,6 @@ export default {
           Rname: "Mark Johnson",
           date: "04/05/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Healthy and tasty breakfast option",
         },
         {
@@ -118,7 +120,6 @@ export default {
           Rname: "Nadun Ratnayake",
           date: "09/20/2024",
           rating: 5,
-          Rcount: "5/5",
           text: "Very comfortable for babies",
         },
         {
@@ -127,7 +128,6 @@ export default {
           Rname: "Harini Karunaratne",
           date: "07/04/2024",
           rating: 5,
-          Rcount: "5/5",
           text: "Great taste",
         },
         {
@@ -136,7 +136,6 @@ export default {
           Rname: "Raj Kumar",
           date: "06/25/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Boosts immunity effectively",
         },
         {
@@ -145,7 +144,6 @@ export default {
           Rname: "Linda Lee",
           date: "07/14/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Very absorbent and gentle",
         },
         {
@@ -154,7 +152,6 @@ export default {
           Rname: "Kavindi Senanayake",
           date: "06/08/2024",
           rating: 4,
-          Rcount: "4/5",
           text: "Good for hair",
         },
         {
@@ -163,7 +160,6 @@ export default {
           Rname: "Anusha Silva",
           date: "03/12/2024",
           rating: 2,
-          Rcount: "2/5",
           text: "Not bad",
         },
         {
@@ -172,7 +168,6 @@ export default {
           Rname: "Chris Martinez",
           date: "10/03/2024",
           rating: 3,
-          Rcount: "3/5",
           text: "Good snack for on-the-go",
         },
         {
@@ -181,7 +176,6 @@ export default {
           Rname: "Dilantha Wickramasinghe",
           date: "02/23/2024",
           rating: 3,
-          Rcount: "3/5",
           text: "Effective for headaches",
         },
       ],
@@ -191,22 +185,66 @@ export default {
         { title: "Ratings", value: "rating" },
         { title: "Review Text", value: "text" },
       ],
+      productCodes: [
+        "BP - Baby Products",
+        "HP - Health Product",
+        "EP - Electronics",
+        "AP - Automotive Parts",
+        "FP - Food Products",
+        "BP - Beauty Product",
+      ],
+      productNames: [
+        "Gerber Baby Food Oat & Banana Cereal",
+        "Detol Hand Sanitizer",
+        "Samsung Galaxy S21",
+        "Bosch Wiper Blades",
+        "Quaker Oats",
+        "Pampers Diapers",
+        "Nestle Milk",
+        "Vitamin C Tablets",
+        "L'Oreal Shampoo",
+        "Oreo Cookies",
+        "Nature Valley Granola Bars",
+        "Panadol Tablets",
+      ],
     };
+  },
+  methods: {
+    submitReview() {
+      this.items.push({
+        code: this.newReview.code,
+        name: this.newReview.name,
+        Rname: this.newReview.Rname,
+        date: this.newReview.date,
+        rating: this.newReview.rating,
+        text: this.newReview.text,
+      });
+      this.newReview = {
+        code: "",
+        name: "",
+        Rname: "",
+        date: "",
+        rating: 0,
+        text: "",
+      };
+      this.showForm = false;
+    },
   },
 };
 </script>
 
 <style scoped>
-.review-area{
-  background-color: rgb(35, 187, 210);
-}
 .reviews-section {
   margin-top: 20px;
+  background-color: #035c97;
+  padding: 20px;
+  border-radius: 10px;
 }
 .reviews-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #ffffff;
 }
 .highlight {
   color: blue;
@@ -214,16 +252,12 @@ export default {
 .write-review-btn {
   text-transform: capitalize;
 }
+.review-card {
+  background-color: #f9f9f9;
+}
 .review-item {
   display: flex;
   margin-bottom: 15px;
-}
-.review-avatar {
-  width: 50px;
-  height: 50px;
-  background-color: lightgray;
-  border-radius: 50%;
-  margin-right: 15px;
 }
 .review-details {
   display: flex;
@@ -233,7 +267,7 @@ export default {
   font-weight: bold;
 }
 .product-name {
-  font-weight: bold;
+  font-style: italic;
 }
 .review-text {
   margin-top: 10px;

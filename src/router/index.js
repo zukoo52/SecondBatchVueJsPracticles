@@ -9,8 +9,17 @@ const routes = [
   },
 
   {
-    path: "/reviewform",
+    path: "/reviews",
     component: import("@/pages/createreaview.vue"),
+  },
+
+  {
+    path: "/form",
+    component: import("@/components/Rform.vue"),
+  },
+  {
+    path: "/sample",
+    component: import("@/pages/sample.vue"),
   },
 ];
 
